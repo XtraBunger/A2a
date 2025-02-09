@@ -24,10 +24,10 @@ int nextPrime( int n ); // Undefined function to find the next prime number
 // int hashCode( string str ) --> Global method to hash strings
 
 template <typename HashedObj>   // Create template of whats behing hashed as a template to allow it to conform to different variable types
-class HashTable
+class BiMap
 {
   public:
-    explicit HashTable( int size = 101 ) : array( nextPrime( size ) ) 
+    BiMap( int size = 101 ) : array( nextPrime( size ) ) 
         // Passes the size to nextPrime to ensure array size is prime after initalizing the hash table
       { makeEmpty( ); } // Makes all entries empty
 

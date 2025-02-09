@@ -1,37 +1,36 @@
-#include "QuadraticProbing.h"
 #include <iostream>
+#include "BiMap.h"
 using namespace std;
 
-/**
- * Internal method to test if a positive number is prime.
- * Not an efficient algorithm.
- */
-bool isPrime( int n )
+    // Simple main
+int main( )
 {
-    if( n == 2 || n == 3 )
-        return true;
+    BiMap<int> h1;
+    BiMap<int> h2;
 
-    if( n == 1 || n % 2 == 0 )
-        return false;
+    const int NUMS = 4000;
+    const int GAP  =   37;
+    int i;
 
-    for( int i = 3; i * i <= n; i += 2 )
-        if( n % i == 0 )
-            return false;
+    cout << "Checking... (no more output means success)" << endl;
 
-    return true;
-}
+    for( i = GAP; i != 0; i = ( i + GAP ) % NUMS )
+        h1.insert( i );
+    
+    h2 = h1;
+    
+    for( i = 1; i < NUMS; i += 2 )
+        h2.remove( i );
 
-/**
- * Internal method to return a prime number at least as large as n.
- * Assumes n > 0.
- */
-int nextPrime( int n )
-{
-    if( n % 2 == 0 )
-        ++n;
+    for( i = 2; i < NUMS; i += 2 )
+        if( !h2.contains( i ) )
+            cout << "Contains fails " << i << endl;
 
-    for( ; !isPrime( n ); n += 2 )
-        ;
+    for( i = 1; i < NUMS; i += 2 )
+    {
+        if( h2.contains( i ) )
+            cout << "OOPS!!! " <<  i << endl;
+    }
 
-    return n;
+    return 0;
 }
