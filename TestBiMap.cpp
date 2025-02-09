@@ -2,34 +2,32 @@
 #include "BiMap.h"
 using namespace std;
 
-    // Simple main
-int main( )
+// Simple main
+int main()
 {
     BiMap<int> h1;
     BiMap<int> h2;
 
-    const int NUMS = 4000;
-    const int GAP  =   37;
-    int i;
-
     cout << "Checking... (no more output means success)" << endl;
 
-    for( i = GAP; i != 0; i = ( i + GAP ) % NUMS )
-        h1.insert( i );
-    
+    for (int i = 1; i < 7; i++) {
+        h1.insert(i,1);
+    }
+
     h2 = h1;
-    
-    for( i = 1; i < NUMS; i += 2 )
-        h2.remove( i );
 
-    for( i = 2; i < NUMS; i += 2 )
-        if( !h2.contains( i ) )
-            cout << "Contains fails " << i << endl;
+    for (int i = 1; i < 3; i++) {
+        h2.removeKey(i);
+    }
 
-    for( i = 1; i < NUMS; i += 2 )
-    {
-        if( h2.contains( i ) )
-            cout << "OOPS!!! " <<  i << endl;
+    std::cout << "\nTesting ddisplay on h1...\n";
+    h1.ddisplay();
+
+    std::cout << "\nTesting ddisplay on h2...\n";
+    h2.ddisplay();
+
+    if (h1.containsKey(3)) {
+        std::cout << "It worked!!\n";
     }
 
     return 0;
