@@ -5,30 +5,96 @@ using namespace std;
 // Simple main
 int main()
 {
-    BiMap<int> h1;
-    BiMap<int> h2;
+    BiMap<int, int> h1;
+    BiMap<int, int> h2;
 
-    cout << "Checking... (no more output means success)" << endl;
-
-    for (int i = 1; i < 7; i++) {
-        h1.insert(i,1);
+    // Insert some key-value pairs into h1
+    for (int i = 1; i < 4; i++) {
+        h1.insert(i, i * 2);
     }
 
-    h2 = h1;
+    std::cout << "Array before rehashing";
+    h1.ddisplay();  
 
-    for (int i = 1; i < 3; i++) {
-        h2.removeKey(i);
+    for (int i = 1; i < 4; i++) {
+        h1.insert(i, i * 5);
+    }
+    // Test adding dupe keys
+
+    if (h1.getSize() < 4) {
+        std::cout << "Dupe keys not added\n";
+    }
+    else {
+        std::cout << "Error has occured";
+        return -1;
     }
 
-    std::cout << "\nTesting ddisplay on h1...\n";
     h1.ddisplay();
 
-    std::cout << "\nTesting ddisplay on h2...\n";
-    h2.ddisplay();
-
-    if (h1.containsKey(3)) {
-        std::cout << "It worked!!\n";
+    for (int i = 4; i < 14; i++) {
+        h1.insert(i, i * 2);
     }
+    // Rehash test
+
+    std::cout << "Results of rehash\n";
+    h1.ddisplay();
+
+    int x = 4;
+
+    std::cout << "Does the array contain this key? x: " << x << '\n';
+    if (h1.containsKey(x)) {
+        std::cout << "Yes\n";
+    }
+    else {
+        std::cout << "No\n";
+    }
+
+    std::cout << "Does the array contain this value? x: " << x << '\n';
+    if (h1.containsVal(x)) {
+        std::cout << "Yes\n";
+    }
+    else {
+        std::cout << "No\n";
+    }
+
+    std::cout << "Does the array contain this key? x: " << x + 100 << '\n';
+    if (h1.containsVal(x + 100)) {
+        std::cout << "Yes\n";
+    }
+    else {
+        std::cout << "No\n";
+    }
+
+    std::cout << "Does the array contain this value? x: " << x+100 << '\n';
+    if (h1.containsVal(x + 100)) {
+        std::cout << "Yes\n";
+    }
+    else {
+        std::cout << "No\n";
+    }
+
+    for (int i = 5; i < 8; i++) {
+        h1.removeKey(i);
+    }
+    std::cout << "Results of removing keys 5 to 8\n";
+    h1.ddisplay();
+
+    for (int i = 2; i < 5; i++) {
+        h1.removeVal(i);
+    }
+    std::cout << "Results of removing values 4,6,8\n";
+    h1.ddisplay();
+
+    std::cout << "Readding key 2 and value 4 with different value/key to test replacement";
+    h1.insert(2, 100);
+    h1.insert(15, 4);
+    h1.ddisplay();
+
+    x = 2;
+    std::cout << "The value associated with key " << x << " is: " << h1.getVal(x) << '\n';
+
+    x += 2;
+    std::cout << "The key associated with value " << x << " is: " << h1.getKey(x) << '\n';
 
     return 0;
 }
