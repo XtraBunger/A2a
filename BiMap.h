@@ -317,7 +317,9 @@ private:
     }               
     // Iterates through the old array and moves each active key into the new table
 
-    size_t myhash(const KeyType& x) const
+    template <typename hashs>
+
+    size_t myhash(const hashs& x) const
     {
         static hash<KeyType > hf;  // Create a hash object called hf
         return hf(x) % keyArray.size();
