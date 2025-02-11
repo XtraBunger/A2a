@@ -10,20 +10,7 @@
 
 using namespace std;    // Remove need to put std::
 
-int nextPrime(int n) {
-    while (true) {
-        bool isPrime = true;
-        for (int i = 2; i * i <= n; ++i) {
-            if (n % i == 0) {
-                isPrime = false;
-                break;
-            }
-        }
-        if (isPrime)
-            return n;
-        ++n;
-    }
-} // Now defined function to find the next prime number
+int nextPrime(int n);
 
 // QuadraticProbing Hash table class
 //
@@ -318,7 +305,6 @@ private:
     // Iterates through the old array and moves each active key into the new table
 
     template <typename hashs>
-
     size_t myhash(const hashs& x) const
     {
         static hash<KeyType > hf;  // Create a hash object called hf
