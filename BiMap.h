@@ -3,6 +3,7 @@
 // Header guard
 
 #include <vector>
+#include <iostream>
 #include <algorithm>
 #include <functional>
 #include <string>
@@ -82,33 +83,6 @@ public:
     }
     // Inserts key via copy
 
-    bool insert(KeyType&& x, ValType&& y)   // Takes rvalue reference, allowing the function to work with rvalues
-    {
-        // Insert x as active
-        int currentPosKey = findPosKey(x);  // Sets current position to the cursor
-        int currentPosVal = findPosVal(y);
-        if (isActiveKey(currentPosKey) || isActiveVal(currentPosVal))
-            return false;   // If the current position is active, that means x is already in the hash, do not put x in again by returning false
-
-        if (keyArray[currentPosKey].info != DELETED)
-            ++currentSize;
-
-        keyArray[currentPosKey].key = std::move(x);    // Set the key at the current pos to be x
-        keyArray[currentPosKey].info = ACTIVE;  // Set it to be active
-        keyArray[currentPosKey].value = std::move(y);
-
-        valArray[currentPosVal].key = std::move(x);    // Set the key at the current pos to be x
-        valArray[currentPosVal].info = ACTIVE;  // Set it to be active
-        valArray[currentPosVal].value = std::move(y);
-
-        if (currentSize > keyArray.size() / 2)
-            rehash();
-        // Rehash; see Section 5.5
-
-        return true;
-    }
-    // Inserts key via move, same as previous insert function but overloaded so it can take different inputs
-
     bool containsKey(const KeyType& x) const
     {
         return isActiveKey(findPosKey(x));
@@ -157,7 +131,7 @@ public:
             return ValType();
         }
         return keyArray[currentPos].value;
-    } 
+    }
 
     KeyType getKey(const ValType& x) const& {
 
@@ -170,9 +144,27 @@ public:
     // Check the KEY associated with VALUE (so checking for key with value)
 
     void ddisplay() {
-        std::cout << "\nKey Array...\n\n";
+        cout << "\nKey Array...\n\n";
         for (auto& entry : keyArray) {
-            std::cout << "Key: " << entry.key << " Value: " << entry.value << '\n';
+            cout << "Key: " << entry.key << " Value: " << entry.value << '\n';
+
+            switch (entry.info) {
+            case ACTIVE:
+                cout << "ACTIVE";
+                break;
+            case EMPTY:
+                cout << "EMPTY";
+                break;
+            default:
+                cout << "DELETED";
+                break;
+            }
+            cout << "\n\n";
+        }
+
+        cout << "\nValue Array...\n\n";
+        for (auto& entry : valArray) {
+            cout << "Key: " << entry.key << " Value: " << entry.value << '\n';
 
             switch (entry.info) {
             case ACTIVE:
@@ -188,25 +180,7 @@ public:
             std::cout << "\n\n";
         }
 
-        std::cout << "\nValue Array...\n\n";
-            for (auto& entry : valArray) {
-                std::cout << "Key: " << entry.key << " Value: " << entry.value << '\n';
-
-                switch (entry.info) {
-                case ACTIVE:
-                    std::cout << "ACTIVE";
-                    break;
-                case EMPTY:
-                    std::cout << "EMPTY";
-                    break;
-                default:
-                    std::cout << "DELETED";
-                    break;
-                }
-                std::cout << "\n\n";
-            }
-
-            std::cout << "Current size of both arrays is: " << currentSize << "\n\n";
+        std::cout << "Current size of both arrays is: " << currentSize << "\n\n";
     }
 
     int getSize() {
@@ -225,7 +199,7 @@ private:
         HashEntry(const KeyType& e = KeyType{ }, EntryType i = EMPTY, const ValType& v = ValType{ }) : key{ e }, info{ i }, value{ v } { }
         // Constructor that copies data into 
 
-        HashEntry(KeyType&& e, EntryType i = EMPTY, ValType&& v = ValType{}) : key{std::move(e)}, info{i}, value{std::move(v)} { }
+        HashEntry(KeyType&& e, EntryType i = EMPTY, ValType&& v = ValType{}) : key{ std::move(e) }, info{ i }, value{ std::move(v) } { }
         // Constructor that moves data
     };
     // Define a struct named Hash Entry with 2 member variables and an overloaded constructor for Lvalue and Rvalue
@@ -287,11 +261,11 @@ private:
         for (auto& entry : keyArray)
             entry.info = EMPTY;
         // Clear new table
-        
+
         for (auto& entry : valArray)
             entry.info = EMPTY;
 
-    // Copy table over
+        // Copy table over
         currentSize = 0;    // Set size = 0
 
         for (auto& entry : oldKeyArray)
@@ -301,13 +275,13 @@ private:
         for (auto& entry : oldValArray)
             if (entry.info == ACTIVE)
                 insert(std::move(entry.key), std::move(entry.value));
-    }               
+    }
     // Iterates through the old array and moves each active key into the new table
 
     template <typename hashs>
     size_t myhash(const hashs& x) const
     {
-        static hash<KeyType > hf;  // Create a hash object called hf
+        static hash<hashs> hf;  // Create a hash object called hf
         return hf(x) % keyArray.size();
     }
     // The hash function

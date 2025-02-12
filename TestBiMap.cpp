@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "BiMap.h"
 using namespace std;
 
@@ -6,7 +7,7 @@ using namespace std;
 int main()
 {
     BiMap<int, int> h1;
-    BiMap<int, int> h2;
+    BiMap<int, std::string> string;
 
     // Insert some key-value pairs into h1
     for (int i = 1; i < 4; i++) {
@@ -14,7 +15,7 @@ int main()
     }
 
     std::cout << "Array before rehashing";
-    h1.ddisplay();  
+    h1.ddisplay();
 
     for (int i = 1; i < 4; i++) {
         h1.insert(i, i * 5);
@@ -65,7 +66,7 @@ int main()
         std::cout << "No\n";
     }
 
-    std::cout << "Does the array contain this value? x: " << x+100 << '\n';
+    std::cout << "Does the array contain this value? x: " << x + 100 << '\n';
     if (h1.containsVal(x + 100)) {
         std::cout << "Yes\n";
     }
@@ -95,6 +96,18 @@ int main()
 
     x += 2;
     std::cout << "The key associated with value " << x << " is: " << h1.getKey(x) << '\n';
+
+    string.insert(1, "Jommy");
+    string.insert(5, "Wow");
+
+    string.ddisplay();
+
+    if (string.containsVal("Wow")) {
+        std::cout << "Yes\n";
+    }
+    else {
+        std::cout << "No\n";
+    }
 
     return 0;
 }
