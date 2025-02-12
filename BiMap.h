@@ -11,7 +11,9 @@
 
 using namespace std;    // Remove need to put std::
 
+bool isPrime(int n);
 int nextPrime(int n);
+
 
 // QuadraticProbing Hash table class
 //
@@ -102,7 +104,7 @@ public:
             return false;
         // Uses the cursor to find the current pos of x, and if it is not active (empty or deleted), then stop the function
 
-        KeyType temp = keyArray[currentPos].key;
+        ValType temp = keyArray[currentPos].value;
         keyArray[currentPos].info = DELETED; // If it is active, set status to deleted
         removeVal(temp);
         --currentSize;
@@ -117,7 +119,7 @@ public:
             return false;
         // Uses the cursor to find the current pos of x, and if it is not active (empty or deleted), then stop the function
 
-        ValType temp = keyArray[currentPos].value;
+        KeyType temp = keyArray[currentPos].key;
         valArray[currentPos].info = DELETED; // If it is active, set status to deleted
         removeKey(temp);
         --currentSize;
@@ -142,6 +144,14 @@ public:
         return valArray[currentPos].key;
     }
     // Check the KEY associated with VALUE (so checking for key with value)
+
+    void display() {
+        for (auto& entry : keyArray) {
+            if (entry.info == ACTIVE) {
+                cout << "Key: " << entry.key << " Value: " << entry.value << '\n';
+            }
+        }
+    }
 
     void ddisplay() {
         cout << "\nKey Array...\n\n";

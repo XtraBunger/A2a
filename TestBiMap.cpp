@@ -102,12 +102,26 @@ int main()
 
     string.ddisplay();
 
+    std::cout << "Testing normal display...\n";
+
+    string.display();
+
     if (string.containsVal("Wow")) {
-        std::cout << "Yes\n";
+        std::cout << "\nYes\n";
     }
     else {
-        std::cout << "No\n";
+        std::cout << "\nNo\n";
     }
+
+    string.removeKey(1);
+    string.display();
+
+    string.insert(4, "Frankly");
+    string.insert(16, "Umstroke");
+
+    string.removeVal("Wow");
+
+    string.display();
 
     return 0;
 }
