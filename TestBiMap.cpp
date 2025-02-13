@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "BiMap.h"
+
 using namespace std;
 
 // Simple main
@@ -8,122 +9,96 @@ int main()
 {
     BiMap<int, int> h1;
     BiMap<int, std::string> string;
-
-
-    // Insert some key-value pairs into h1
+    
     for (int i = 1; i < 4; i++) {
         h1.insert(i, i * 2);
     }
+        // Insert some key-value pairs into h1 (But not enough to trigger a rehash)
 
     std::cout << "Array before rehashing";
     h1.ddisplay();
+    h1.display();
+
+    for (int i = 1; i < 4; i++) {
+        h1.insert(i, i * 10);
+    }
+        // Test if dupe keys are added by adding same keys with different values
+
+    std::cout << "Keys and values should remain the same, as dupe keyes are added, so they are ignored";
+
+    h1.ddisplay();
+    h1.display();   
+        // The new values should not be there, array should be the same as the first ddisplay and display call at lines 20-21
+
+    h1.makeEmpty();
+    std::cout << "Now empty array";
+    h1.ddisplay();
+        // Makes array empty and call both displays to prove it
 
     for (int i = 1; i < 4; i++) {
         h1.insert(i, i * 5);
     }
-    // Test adding dupe keys
+        // Insert new values, similar to the first one
 
-    if (h1.getSize() < 4) {
-        std::cout << "Dupe keys not added\n";
-    }
-    else {
-        std::cout << "Error has occured";
-        return -1;
-    }
-
+    h1.removeKey(1);
     h1.ddisplay();
+    std::cout << "Key 1 and val 5 removed";
+        // Remove key 1 and associated value 5
 
-    for (int i = 4; i < 14; i++) {
-        h1.insert(i, i * 2);
-    }
-    // Rehash test
-
-    std::cout << "Results of rehash\n";
+    h1.removeVal(10);
+    std::cout << "Val 10 and key 2 removed";
     h1.ddisplay();
+        // Remove val 10 and its respective key 5
 
-    int x = 4;
+    std::cout << "The current size of the bimap is: " << h1.getSize() << '\n';
+    h1.display();
 
-    std::cout << "Does the array contain this key? x: " << x << '\n';
-    if (h1.containsKey(x)) {    //CHECK FIX
-        std::cout << "Yes\n";
+    if (h1.containsKey(3)){
+        std::cout << "3 is indeed in the bimap as a key\n";
     }
-    else {
-        std::cout << "No\n";
-    }
-
-    std::cout << "Does the array contain this value? x: " << x << '\n';
-    if (h1.containsVal(x)) { //CHECK FIX
-        std::cout << "Yes\n";
-    }
-    else {
-        std::cout << "No\n";
+    else{
+        std::cout << "The number 3 (spelled t-h-r-e-e) does not exist in this bimap as a key\n";
     }
 
-    std::cout << "Does the array contain this key? x: " << x + 100 << '\n';
-    if (h1.containsVal(x + 100)) {
-        std::cout << "Yes\n";
+    if (h1.containsKey(30)){
+        std::cout << "30 is indeed in the bimap as a key\n";
     }
-    else {
-        std::cout << "No\n";
-    }
-
-    std::cout << "Does the array contain this value? x: " << x + 100 << '\n';
-    if (h1.containsVal(x + 100)) {
-        std::cout << "Yes\n";
-    }
-    else {
-        std::cout << "No\n";
+    else{
+        std::cout << "The number 30 does not exist in this bimap as a key\n";
     }
 
-    for (int i = 5; i < 8; i++) {
-        h1.removeKey(i);     // SETS TO EMPTY FOR SOME ERASON
+    if (h1.containsVal(15)){
+        std::cout << "15 is indeed in the bimap as a value\n";
     }
-    std::cout << "Results of removing keys 5 to 8\n";
-    h1.ddisplay();
-
-    for (int i = 2; i < 5; i++) {
-        h1.removeVal(i);
+    else{
+        std::cout << "The number 15 does not exist in this bimap\n";
     }
-    std::cout << "Results of removing values 4,6,8\n";
-    h1.ddisplay();
 
-    std::cout << "Readding key 2 and value 4 with different value/key to test replacement";
-    h1.insert(2, 100);
-    h1.insert(15, 4);
-    h1.ddisplay();
+    if (h1.containsVal(7)){
+        std::cout << "7 is indeed in the bimap as a value\n";
+    }
+    else{
+        std::cout << "The number 7 does not exist in this bimap\n";
+    }
+        // Check code for vals that do and don't exist in the bimap
 
-    x = 2;
-    std::cout << "The value associated with key " << x << " is: " << h1.getVal(x) << '\n';
+    std::cout << "The key associated with the value ""15"" is " << h1.getKey(15) << '\n';
+    std::cout << "The key associated with the key ""3"" is " << h1.getVal(3);
+        // Test getKey and getVal (should match up) with the inserted values so the pair of (3,15)
 
-    x += 2;
-    std::cout << "The key associated with value " << x << " is: " << h1.getKey(x) << '\n';
-
-    string.insert(1, "Jommy");
-    string.insert(5, "Wow");
-
+    h1.makeEmpty();
+    
+    for (int i = 1; i <= 5; i++) {
+        string.insert(i, "Big " + to_string(i));
+    }
+    // Test rehash (This is bimap before rehash) and test adding strings as values
     string.ddisplay();
 
-    std::cout << "Testing normal display...\n";
-
-    string.display();
-
-    if (string.containsVal("Wow")) {
-        std::cout << "\nYes\n";
+    for (int i = 6; i <= 11; i++) {
+        string.insert(i, "Boss " + to_string(i));
     }
-    else {
-        std::cout << "\nNo\n";
-    }
+        // Test rehashing
 
-    string.removeKey(1);
-    string.display();
-
-    string.insert(4, "Frankly");
-    string.insert(16, "Umstroke");
-
-    string.removeVal("Wow");
     string.ddisplay();
-    string.display();
-
-
     return 0;
 }
