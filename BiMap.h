@@ -62,7 +62,7 @@ public:
         // Insert x as active
         int currentPosKey = findPosKey(x);  // Sets current position to the cursor
         int currentPosVal = findPosVal(y);
-        if (isActiveKey(currentPosKey) || isActiveVal(currentPosVal))
+        if (isActive(currentPosKey, keyArray) || isActive(currentPosVal, valArray))
             return false;   // If the current position is active, that means x is already in the hash, do not put x in again by returning false
 
         if (keyArray[currentPosKey].info != DELETED)
@@ -87,26 +87,29 @@ public:
 
     bool containsKey(const KeyType& x) const
     {
-        return isActiveKey(findPosKey(x));
+        return isActive(findPosKey(x), keyArray);
     }
     // Function that finds if the table contains x, checks if the location findPos (cursor) end on is active with isActive
 
     bool containsVal(const ValType& x) const
     {
-        return isActiveVal(findPosVal(x));
+        return isActive(findPosVal(x), valArray);
     }
     // Function that finds if the table contains x, checks if the location findPos (cursor) end on is active with isActive
 
     bool removeKey(const KeyType& x)
     {
         int currentPos = findPosKey(x);
-        if (!isActiveKey(currentPos))
+        if (!isActive(currentPos, keyArray))
             return false;
         // Uses the cursor to find the current pos of x, and if it is not active (empty or deleted), then stop the function
 
         ValType temp = keyArray[currentPos].value;
         keyArray[currentPos].info = DELETED; // If it is active, set status to deleted
-        removeVal(temp);
+
+        currentPos = findPosVal(temp);
+        valArray[currentPos].info = DELETED;
+
         --currentSize;
         return true;    // End function
     }
@@ -115,13 +118,16 @@ public:
     bool removeVal(const ValType& x)
     {
         int currentPos = findPosVal(x);
-        if (!isActiveVal(currentPos))
+        if (!isActive(currentPos, valArray))
             return false;
         // Uses the cursor to find the current pos of x, and if it is not active (empty or deleted), then stop the function
 
-        KeyType temp = keyArray[currentPos].key;
+        KeyType temp = valArray[currentPos].key;
         valArray[currentPos].info = DELETED; // If it is active, set status to deleted
-        removeKey(temp);
+
+        currentPos = findPosKey(temp);
+        keyArray[currentPos].info = DELETED;
+
         --currentSize;
         return true;    // End function
     }
@@ -129,7 +135,7 @@ public:
     ValType getVal(const KeyType& x) const& {
 
         int currentPos = findPosKey(x);
-        if (!isActiveKey(currentPos)) {
+        if (!isActive(currentPos, keyArray)) {
             return ValType();
         }
         return keyArray[currentPos].value;
@@ -138,7 +144,7 @@ public:
     KeyType getKey(const ValType& x) const& {
 
         int currentPos = findPosVal(x);
-        if (!isActiveVal(currentPos)) {
+        if (!isActive(currentPos, valArray)) {
             return KeyType();
         }
         return valArray[currentPos].key;
@@ -154,9 +160,9 @@ public:
     }
 
     void ddisplay() {
-        cout << "\nKey Array...\n\n";
+        cout << "\nKey Array...\n";
         for (auto& entry : keyArray) {
-            cout << "Key: " << entry.key << " Value: " << entry.value << '\n';
+            cout << "Key: " << entry.key << " Value: " << entry.value << " Status: ";
 
             switch (entry.info) {
             case ACTIVE:
@@ -169,12 +175,12 @@ public:
                 cout << "DELETED";
                 break;
             }
-            cout << "\n\n";
+            cout << "\n";
         }
 
-        cout << "\nValue Array...\n\n";
+        cout << "\nValue Array...\n";
         for (auto& entry : valArray) {
-            cout << "Key: " << entry.key << " Value: " << entry.value << '\n';
+            cout << "Key: " << entry.key << " Value: " << entry.value << " Status: ";
 
             switch (entry.info) {
             case ACTIVE:
@@ -187,7 +193,7 @@ public:
                 std::cout << "DELETED";
                 break;
             }
-            std::cout << "\n\n";
+            std::cout << "\n";
         }
 
         std::cout << "Current size of both arrays is: " << currentSize << "\n\n";
@@ -218,19 +224,15 @@ private:
     vector<HashEntry> valArray;
     int currentSize;    // Initalize an int to control size
 
-    bool isActiveKey(int currentPos) const
+    bool isActive(int currentPos, const vector<HashEntry> array) const
     {
-        return keyArray[currentPos].info == ACTIVE;
+        return array[currentPos].info == ACTIVE;
     }
     // Checks if the current position is active
 
-    bool isActiveVal(int currentPos) const
-    {
-        return valArray[currentPos].info == ACTIVE;
-    }
 
-    int findPosKey(const KeyType& x) const
-    {
+    int findPosKey(const KeyType& x) const {    // y = 0 for key, y = 1 for val
+
         int offset = 1; // Set offset (i) =1
         int currentPos = myhash(x); // Set initial cursor to initial hash value
 
@@ -241,11 +243,11 @@ private:
             offset += 2;   // Increase i by 2
         }
         return currentPos;  // Return position of cursor
-    }
-    // The cursor
 
-    int findPosVal(const ValType& x) const
-    {
+    }
+
+    int findPosVal(const ValType& x) const {    // y = 0 for key, y = 1 for val
+
         int offset = 1; // Set offset (i) =1
         int currentPos = myhash(x); // Set initial cursor to initial hash value
 
@@ -256,7 +258,10 @@ private:
             offset += 2;   // Increase i by 2
         }
         return currentPos;  // Return position of cursor
+
     }
+
+    // The cursor
 
     void rehash()
     {

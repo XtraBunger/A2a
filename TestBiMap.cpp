@@ -9,6 +9,7 @@ int main()
     BiMap<int, int> h1;
     BiMap<int, std::string> string;
 
+
     // Insert some key-value pairs into h1
     for (int i = 1; i < 4; i++) {
         h1.insert(i, i * 2);
@@ -43,7 +44,7 @@ int main()
     int x = 4;
 
     std::cout << "Does the array contain this key? x: " << x << '\n';
-    if (h1.containsKey(x)) {
+    if (h1.containsKey(x)) {    //CHECK FIX
         std::cout << "Yes\n";
     }
     else {
@@ -51,7 +52,7 @@ int main()
     }
 
     std::cout << "Does the array contain this value? x: " << x << '\n';
-    if (h1.containsVal(x)) {
+    if (h1.containsVal(x)) { //CHECK FIX
         std::cout << "Yes\n";
     }
     else {
@@ -75,7 +76,7 @@ int main()
     }
 
     for (int i = 5; i < 8; i++) {
-        h1.removeKey(i);
+        h1.removeKey(i);     // SETS TO EMPTY FOR SOME ERASON
     }
     std::cout << "Results of removing keys 5 to 8\n";
     h1.ddisplay();
@@ -120,8 +121,9 @@ int main()
     string.insert(16, "Umstroke");
 
     string.removeVal("Wow");
-
+    string.ddisplay();
     string.display();
+
 
     return 0;
 }
