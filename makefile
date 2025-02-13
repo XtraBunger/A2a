@@ -17,7 +17,7 @@ QuadraticProbing.o: QuadraticProbing.cpp BiMap.h
 
 # Clean up build files
 clean:
-	rm -f $(TARGET) $(OBJECTS)
+	del /F /Q $(TARGET) $(OBJECTS)
 
 run: $(TARGET)
 	./$(TARGET)
