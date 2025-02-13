@@ -80,7 +80,7 @@ public:
             // Inserts the key and value to the valArray, and sets their status to ACTIVE
 
         // Rehash; see Section 5.5
-        if (currentSize > keyArray.size() / 2)
+        if (currentSize > static_cast<int>(keyArray.size()) / 2)
             rehash();
         // Does the current size of the table/number of key exceed half of the total table size? If so rehash the bimap
 
