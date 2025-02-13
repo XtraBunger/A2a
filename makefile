@@ -4,6 +4,9 @@ CXXFLAGS = -g -Wall -std=c++20
 TARGET = TestBiMap
 OBJECTS = TestBiMap.o QuadraticProbing.o
 
+# Build all targets
+all: $(TARGET)
+
 # Build target
 $(TARGET): $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJECTS)
